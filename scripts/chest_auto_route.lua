@@ -10,7 +10,6 @@ local LAST_IDX       = 140
 local LOOP_DELAY     = 0
 local FALLBACK_NAME  = "charm:variant_chest_2"
 local BATCH_SIZE     = 200                   -- stay under ~255 events
-local _unpack        = table.unpack or unpack
 
 -- === Peripherals ===
 local parentChest    = peripheral.wrap(PARENT_NAME)
@@ -20,7 +19,7 @@ local fallbackChest  = peripheral.wrap(FALLBACK_NAME)
 local monitor        = peripheral.wrap("monitor_0")
 local speaker        = peripheral.wrap("left")
 
--- Build fixed list of destination chests (exclude parent; exclude fallback from matching)
+-- Build fixed list of destination chests
 local destChests = {}
 for i = FIRST_IDX, LAST_IDX do
     local name = ("minecraft:chest_%d"):format(i)
@@ -97,7 +96,7 @@ local function buildChestIndex(chests)
     end
 
     for i = 1, #funcs, BATCH_SIZE do
-        parallel.waitForAll(_unpack(funcs, i, math.min(i + BATCH_SIZE - 1, #funcs)))
+        parallel.waitForAll(table.unpack(funcs, i, math.min(i + BATCH_SIZE - 1, #funcs)))
     end
     return index
 end
